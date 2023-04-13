@@ -1,11 +1,13 @@
 from fastapi import FastAPI
-import talib
+
+import data.index
+
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.get("/index")
+async def search():
+    return data.crawling.search_index()
 
 
 @app.get("/hello/{name}")
