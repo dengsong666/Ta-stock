@@ -20,7 +20,7 @@ def save_day(code, name, start_date='19900101', end_date=(datetime.today() + tim
     df = pd.DataFrame(index).drop(columns=drop_col, errors='ignore')
     df.to_csv(path_or_buf=f"中证指数/{name}-{code}.csv", mode=mode, index=False, header=header)
 
-# 搜索指数
+# 搜索中证指数
 def search(search_input):
     api = "https://www.csindex.com.cn/csindex-home/index-list/query-index-item"
     data = {"sorter": {"sortField": None, "sortOrder": None}, "pager": {"pageNum": 1, "pageSize": 10},
@@ -30,7 +30,6 @@ def search(search_input):
                             "indexSeries": None, "undefined": None}
             }
     index = requests.post(api, json=data).json().get('data') or []
-    return [{'indexCode': i['indexCode'], 'indexName': i['indexName'], 'publishDate': i['publishDate']} for i in index]
+    print(index)
+    return [{'indexCode': i['indexCode'], 'indexName': i['indexName']} for i in index]
     # print(index['indexCode'],index['indexName'],index['publishDate'],index['assetsClassify'],index['consNumber'])
-
-

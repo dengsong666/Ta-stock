@@ -1,14 +1,9 @@
 from fastapi import FastAPI
 
-import data.index
+from route import index
 
 app = FastAPI()
-
-
-@app.get("/index")
-async def search():
-    return data.crawling.search_index()
-
+app.include_router(index.router)
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
