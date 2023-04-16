@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from data import index
+from data import zhongzheng_index
 
 # 属于该模块的路由
 router = APIRouter(
@@ -15,9 +15,10 @@ router = APIRouter(
 # 查询指数
 @router.get('/search')
 async def search(search_input):
-    return index.search(search_input)
+    print(search_input)
+    return zhongzheng_index.search(search_input)
 
 # 保存指数
 @router.post('/save/{name}/{code}')
 async def save(name, code):
-    return index.save_day(name, code)
+    return zhongzheng_index.save_day(name, code)

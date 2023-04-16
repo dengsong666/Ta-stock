@@ -5,7 +5,7 @@ from .database import Base
 
 
 class SecondaryIndustryDay(Base):
-    __tablename__ = "secondary-industry-day"
+    __tablename__ = "index"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
