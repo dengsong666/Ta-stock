@@ -35,5 +35,10 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
+  },
+  "scripts": {
+    "beforeCompile": "pnpm compile",
+    "beforePreview": "pnpm compile",
+    "beforeUpload": "pnpm compile"
   }
 }

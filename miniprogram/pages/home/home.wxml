@@ -1,3 +1,23 @@
 <!--pages/home/home.wxml-->
-<van-search value="{{ value }}" placeholder="请输入搜索关键词" bind:search="onSearch"/>
+<view class="search-box">
+  <van-search value="{{ searchInput }}" placeholder="请输入搜索关键词" bind:change="onChange" bind:search="onSearch" bind:cancel="onCancel" />
+  <scroll-view hidden="{{hideSearchList}}" scroll-y="true" class="search-list" style="height: min-content;max-height: 50vw;">
+    <block wx:if="{{searchList.length}}">
+      <view wx:for="{{searchList}}" wx:key="indexCode" class="search-item" bindtap="onSelect" data-search="{{item}}">
+        <text>{{item.indexName}}</text>
+        <text>{{item.indexCode}}</text>
+      </view>
+    </block>
+    <van-empty wx:else image="" description="试试其他关键词" />
+  </scroll-view>
+</view>
+<!-- <view class="charts-box">
+  <qiun-wx-ucharts type="candle" opts="{{opts}}" chartData="{{chartData}}" disableScroll="{{true}}" ontouch="{{true}}" onzoom="{{true}}" />
+</view> -->
 
+<!-- wWidth:屏幕宽度； wHeight:屏幕高度； yWidth:y轴画布宽度；  cHeight:k线图表高度； maincWidth: k线画布宽度（根据K线大小和边距进行计算）；scrollToRight：设置scrollview滚动索引   -->
+<scroll-view class="scroll_box" style="width:100%;height:{{cHeight}}px;position:absolute;" scroll-x bindscroll="onScroll" bindtouchend="onTouchEnd" bindtouchstart="onTouchStart">
+  <canvas type="2d" id="mainctx" style="width:100%;height:{{cHeight}}px;position:absolute;background:#fff;"></canvas>
+  <canvas type="2d" id="optctx" style="width:100%;height:{{cHeight}}px;"></canvas>
+</scroll-view>
+<canvas type="2d" id="yctx" style="width:100%;height:{{cHeight}}px;margin-left:100%;background:#fff;"></canvas>

@@ -1,25 +1,21 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@qiun/wx-ucharts': 2.5.0-20230101
   '@vant/weapp': ^1.10.15
-  miniprogram-api-typings: ^2.12.0
 
 dependencies:
+  '@qiun/wx-ucharts': 2.5.0-20230101
   '@vant/weapp': registry.npmmirror.com/@vant/weapp/1.10.15
 
-devDependencies:
-  miniprogram-api-typings: registry.npmmirror.com/miniprogram-api-typings/2.12.0
-
 packages:
+
+  /@qiun/wx-ucharts/2.5.0-20230101:
+    resolution: {integrity: sha512-sAaNUf4U6r4/0JZMTlfNwrtfT0v8qFO02B/wYsj4yZGTDAQ/QctGgKI7hVUDUSrqZnjH6xWqE+ql0FOIs1fTuQ==}
+    dev: false
 
   registry.npmmirror.com/@vant/weapp/1.10.15:
     resolution: {integrity: sha512-swM4k3pVwt/6Tnijvq86paLiKE1CzbrBQ4lR7+9uRhwKOM0HS3ooK1Q4IjSEyxQ59ZFKmYYvZln77RZcnSDqmA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vant/weapp/-/weapp-1.10.15.tgz}
     name: '@vant/weapp'
     version: 1.10.15
     dev: false
-
-  registry.npmmirror.com/miniprogram-api-typings/2.12.0:
-    resolution: {integrity: sha512-ibvbqeslVFur0IAvTxLMvsbtvVcMo6gwvOnj0YZHV7aeDLu091VQRrETT2QuiG9P6aZWRcxeNGJChRKVPCp9VQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/miniprogram-api-typings/-/miniprogram-api-typings-2.12.0.tgz}
-    name: miniprogram-api-typings
-    version: 2.12.0
-    dev: true
