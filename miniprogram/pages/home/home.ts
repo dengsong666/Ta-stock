@@ -39,13 +39,13 @@ Page({
       searchInput: ''
     })
   },
-    // 监听 scrollView 的滚动，监听当前滚动到的 K线为哪一根
-  onScroll (e) {
-    console.log(e);
-    
+  // 监听 scrollView 的滚动，监听当前滚动到的 K线为哪一根
+  onScroll(e) {
+    console.log(e)
+
     this.curMsg = drawKLinesUtil.onScroll(e.detail.scrollLeft)
     // 用于 scroll view 的 touch 事件，不需要绘制K线点击态可不写
-    this.isScroll = true;
+    this.isScroll = true
   },
   /**
    * 生命周期函数--监听页面加载
@@ -67,7 +67,7 @@ Page({
         const optctx = res[0][1].node.getContext('2d')
         const yctx = res[0][2].node.getContext('2d')
         console.log(yctx)
-        
+
         // const dpr = wx.getSystemInfoSync().pixelRatio
         const w = res[0].width
         const h = res[0].height
@@ -94,7 +94,7 @@ Page({
         // 绘制K线图
         // scrollview 中嵌套canvas，scroll-left 必须在draw回调里面去实现，否则不起作用
         // 如果不需要用到 scroll-left 则直接调用K线绘制即可，不需要重现回调： drawKLinesUtil.onDrawKLines（）
-        drawKLinesUtil.onDrawKLines( )
+        drawKLinesUtil.onDrawKLines()
       })
   },
 
