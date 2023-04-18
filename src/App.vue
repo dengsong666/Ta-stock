@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import KChart from '@/components/Kchart.vue'
 import { test_data, test_markers } from './test'
+import 'uno.css'
 const kChart = ref()
 </script>
 
