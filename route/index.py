@@ -14,9 +14,9 @@ router = APIRouter(
 
 # 查询指数
 @router.get('/search')
-async def search(search_input):
-    print(search_input)
-    return zhongzheng_index.search(search_input)
+async def search(input):
+    print(input)
+    return zhongzheng_index.search(input)
 
 # 保存指数
 @router.post('/save/{name}/{code}')
