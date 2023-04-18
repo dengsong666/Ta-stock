@@ -19,6 +19,6 @@ async def search(input):
     return zhongzheng_index.search(input)
 
 # 保存指数
-@router.post('/save/{name}/{code}')
+@router.get('/get-day')
 async def save(name, code):
-    return zhongzheng_index.save_day(name, code)
+    return zhongzheng_index.get_day(name, code)
