@@ -10334,9 +10334,8 @@ export const test_data = [
     consNumber: 50,
     peg: 20.25
   }
-]
-  .map((item) => ({ time: item.tradeDate.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'), open: item.open, high: item.high, low: item.low, close: item.close }))
-  .reduce((total, cur) => {
-    obj[cur.time] ? '' : (obj[cur.time] = true && total.push(cur))
-    return total
-  }, [])
+].map((item) => ({ time: item.tradeDate.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'), open: item.open, high: item.high, low: item.low, close: item.close }))
+// .reduce((total, cur) => {
+//   obj[cur.time] ? '' : (obj[cur.time] = true && total.push(cur))
+//   return total
+// }, [])

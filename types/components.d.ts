@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Kchart: typeof import('./../src/components/Kchart.vue')['default']
     KToolTip: typeof import('./../src/components/KToolTip.vue')['default']
+    NSelect: typeof import('naive-ui')['NSelect']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

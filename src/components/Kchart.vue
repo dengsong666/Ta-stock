@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { chartOptions, seriesOptions } from '@/configs'
 import {
   ChartOptions,
   createChart,
@@ -8,24 +9,26 @@ import {
   SeriesDataItemTypeMap,
   SeriesMarker,
   SeriesOptions,
+  SeriesOptionsMap,
   SeriesType,
   Time,
-  TimeFormatterFn,
   TimeScaleOptions
 } from 'lightweight-charts'
+
 const props = withDefaults(
   defineProps<{
     type: SeriesType
     data: SeriesDataItemTypeMap[keyof SeriesDataItemTypeMap][]
     markers?: SeriesMarker<Time>[]
-    chartOptions?: ChartOptions
+    chartOptions?: DeepPartial<ChartOptions>
     autosize?: boolean
-    seriesOptions?: SeriesOptions<any>
-    timeScaleOptions?: TimeScaleOptions
-    priceScaleOptions?: PriceScaleOptions
+    seriesOptions?: DeepPartial<SeriesOptions<SeriesOptionsMap[keyof SeriesOptionsMap]>>
+    timeScaleOptions?: DeepPartial<TimeScaleOptions>
+    priceScaleOptions?: DeepPartial<PriceScaleOptions>
   }>(),
   {
-    // chartOptions: {  }
+    chartOptions: () => chartOptions,
+    seriesOptions: () => seriesOptions
   }
 )
 let series: ISeriesApi<SeriesType> | null
@@ -90,7 +93,7 @@ watch(
 </script>
 
 <template>
-  <div class="h100%" style="height: 100%" ref="chartRef"></div>
+  <div class="h50%" ref="chartRef"></div>
 </template>
 
 <style scoped></style>
