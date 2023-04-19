@@ -1,47 +1,33 @@
 <script setup lang="ts">
-import { IChartApi } from 'lightweight-charts'
-import { ComponentInternalInstance } from 'vue'
-
-const props = defineProps<{
-  chart?: ComponentInternalInstance
-}>()
-console.log(props.chart)
-onMounted(() => {
-  if (props.chart) {
-    console.log(props.chart)
-
-    // props.chart.applyOptions({
-    //   rightPriceScale: {
-    //     scaleMargins: {
-    //       top: 0.3,
-    //       bottom: 0.25
-    //     }
-    //   },
-    //   crosshair: {
-    //     horzLine: {
-    //       visible: false,
-    //       labelVisible: false
-    //     }
-    //   },
-    //   grid: {
-    //     vertLines: {
-    //       visible: false
-    //     },
-    //     horzLines: {
-    //       visible: false
-    //     }
-    //   }
-    // })
-
-    // props.chart.subscribeCrosshairMove((param) => {
-    //   console.log(param)
-    // })
+import { useKChart } from '@/store'
+const kChart = useKChart()
+kChart.option.chart = {
+  rightPriceScale: {
+    scaleMargins: {
+      top: 0.3,
+      bottom: 0.25
+    }
+  },
+  crosshair: {
+    horzLine: {
+      labelVisible: false
+    }
   }
-})
+}
+watch(kChart.crosshair, (val) => console.log(val))
 </script>
 
 <template>
-  <div class="absolute left-12px z1"></div>
+  <div class="grid-1-9-16 absolute left-12px top-8px z2 c-#fff">
+    <span>日期：{{ kChart.crosshair._internal_originalTime || '--' }}</span>
+    <span>开盘：{{ kChart.crosshair.open || '--' }}</span>
+    <span>最高：{{ kChart.crosshair.high || '--' }}</span>
+    <span>最低：{{ kChart.crosshair.low || '--' }}</span>
+    <span>收盘：{{ kChart.crosshair.close }}</span>
+    <span>涨跌幅：{{ kChart.crosshair.changePct || '--' }}%</span>
+    <span>成交量：{{ kChart.crosshair.tradingVol || '--' }}</span>
+    <span>滚动市盈率{{ kChart.crosshair.peg || '--' }}</span>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

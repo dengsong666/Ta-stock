@@ -1,5 +1,5 @@
 import http from './http'
-import { StockIndex } from './types/stock'
+import { StockIndex, StockIndexDay } from './types/stock'
 
 export function searchIndex(params: { input: string }) {
   return http.get<StockIndex[]>({
@@ -8,7 +8,7 @@ export function searchIndex(params: { input: string }) {
   })
 }
 export function getIndexDay(params: { name: string; code: string }) {
-  return http.get({
+  return http.get<StockIndexDay[]>({
     url: '/stock-index/get-day',
     params
   })

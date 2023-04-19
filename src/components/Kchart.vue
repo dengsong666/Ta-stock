@@ -1,54 +1,47 @@
 <script lang="ts" setup>
-import { chartOptions, seriesOptions } from '@/configs'
-import { useCommon } from '@/store'
-import {
-  ChartOptions,
-  createChart,
-  IChartApi,
-  ISeriesApi,
-  PriceScaleOptions,
-  SeriesDataItemTypeMap,
-  SeriesMarker,
-  SeriesOptions,
-  SeriesOptionsMap,
-  SeriesType,
-  Time,
-  TimeScaleOptions
-} from 'lightweight-charts'
-import { getCurrentInstance } from 'vue'
-const props = withDefaults(
-  defineProps<{
-    type: SeriesType
-    data: SeriesDataItemTypeMap[keyof SeriesDataItemTypeMap][]
-    markers?: SeriesMarker<Time>[]
-    chartOptions?: DeepPartial<ChartOptions>
-    autosize?: boolean
-    seriesOptions?: DeepPartial<SeriesOptions<SeriesOptionsMap[keyof SeriesOptionsMap]>>
-    timeScaleOptions?: DeepPartial<TimeScaleOptions>
-    priceScaleOptions?: DeepPartial<PriceScaleOptions>
-  }>(),
-  {
-    chartOptions: () => chartOptions,
-    seriesOptions: () => seriesOptions
-  }
-)
+import { defaultChartOptions, defaultSeriesOptions } from '@/configs'
+import { useKChart } from '@/store'
+import { createChart, IChartApi, ISeriesApi, SeriesMarker, SeriesType, Time } from 'lightweight-charts'
+const props = defineProps<{
+  type: SeriesType
+  data: ChartOption.Data
+  markers?: SeriesMarker<string>[]
+  chartOptions?: ChartOption.Base
+  autosize?: boolean
+  seriesOptions?: ChartOption.Series
+  timeScaleOptions?: ChartOption.TimeScale
+  priceScaleOptions?: ChartOption.PriceScale
+}>()
+const kChart = useKChart()
+const { data, markers, chartOptions, seriesOptions, priceScaleOptions, timeScaleOptions, autosize } = props
+const options = reactive({
+  chart: { ...defaultChartOptions, ...chartOptions, ...kChart.option.chart },
+  series: { ...defaultSeriesOptions, ...seriesOptions, ...kChart.option.series }
+})
 let series: ISeriesApi<SeriesType> | null
 let chart: IChartApi | null
 
 const chartRef = ref()
-
 const resizeHandler = () => {
   if (!chart || !chartRef.value) return
   const dimensions = chartRef.value.getBoundingClientRect()
   chart.resize(dimensions.width, dimensions.height)
 }
 onMounted(() => {
-  const { data, markers, chartOptions, seriesOptions, priceScaleOptions, timeScaleOptions, autosize } = props
-  chart = createChart(chartRef.value, chartOptions)
-  useCommon().chart = chart as any
-  series = chart![`add${props.type}Series`](seriesOptions)
+  chart = createChart(chartRef.value, options.chart)
+  series = chart![`add${props.type}Series`](options.series)
   series.setData(data)
   markers && series.setMarkers(markers)
+  chart.subscribeCrosshairMove((param) => {
+    // console.log(param)
+    // console.log(param.seriesData, series)
+    // param.time && (kChart.crosshair = param.seriesData.get(series!) as any)
+    if (param.logical) {
+      console.log(kChart.list[param.logical])
+
+      param.logical && (kChart.crosshair = kChart.list[param.logical] as any)
+    }
+  })
   priceScaleOptions && chart.priceScale('').applyOptions(priceScaleOptions)
   timeScaleOptions && chart.timeScale().applyOptions(timeScaleOptions)
 
@@ -80,7 +73,7 @@ watch(
 
 watch(
   () => props.seriesOptions,
-  (newOptions) => series && series.applyOptions(newOptions)
+  (newOptions) => series && newOptions && series.applyOptions(newOptions)
 )
 
 watch(
@@ -95,7 +88,7 @@ watch(
 </script>
 
 <template>
-  <div class="h50%" ref="chartRef">
+  <div class="relative h50%" ref="chartRef">
     <slot></slot>
   </div>
 </template>

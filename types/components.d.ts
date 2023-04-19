@@ -9,10 +9,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    Kchart: typeof import('../src/components/KChart.vue')['default']
     KChart: typeof import('./../src/components/KChart.vue')['default']
     KLegends: typeof import('./../src/components/KLegends.vue')['default']
-    KLengend: typeof import('../src/components/KLegends.vue')['default']
     KToolTip: typeof import('./../src/components/KToolTip.vue')['default']
     NSelect: typeof import('naive-ui')['NSelect']
     RouterLink: typeof import('vue-router')['RouterLink']

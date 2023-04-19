@@ -4,9 +4,13 @@ const data = ref([])
 </script>
 
 <template>
-  <Search @index-day="data = $event" />
-  <KChart type="Candlestick" :data="data" :markers="[]">
-    <KLegends />
-  </KChart>
+  <Suspense>
+    <div class="h100%">
+      <Search @index-day="data = $event" />
+      <KChart type="Candlestick" :data="data" :markers="[]">
+        <KLegends />
+      </KChart>
+    </div>
+  </Suspense>
 </template>
 <style lang="scss"></style>

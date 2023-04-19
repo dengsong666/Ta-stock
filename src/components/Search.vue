@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getIndexDay, searchIndex } from '@/apis'
+import { useKChart } from '@/store'
 const search = reactive({
   input: '',
   loading: false,
@@ -17,8 +18,10 @@ async function handleSearch(input: string) {
 async function handleUpdate(value: string) {
   const [name, code] = value.split('-')
   const { data } = await getIndexDay({ name, code })
+  useKChart().list = data
   emit('index-day', data)
 }
+handleUpdate('上证指数-000001')
 </script>
 
 <template>
