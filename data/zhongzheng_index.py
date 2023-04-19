@@ -25,7 +25,6 @@ def get_day(name, code, start_date='19900101', end_date=(datetime.today() + time
         api = "https://www.csindex.com.cn/csindex-home/perf/index-perf"
         params = {'indexCode': code, 'startDate': start_date, 'endDate': end_date}
         index = requests.get(api, params).json().get('data')
-        print(index)
         drop_col = ['indexCode', 'indexNameCnAll', 'indexNameCn', 'indexNameEnAll', 'indexNameEn']
         df = pd.DataFrame(index).drop(columns=drop_col, errors='ignore').rename(columns={'tradeDate': 'time'})
         df.dropna(how='any', subset=['open', 'high', 'low', 'close'], inplace=True)  # 过滤掉某些列值为空的行
