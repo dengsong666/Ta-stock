@@ -6,7 +6,7 @@ export function setupStore(app: App<Element>) {
 }
 export const useCommon = defineStore('common', {
   state: () => ({
-    xxx: true
+    chart: null
   }),
   actions: {
     Func() {}

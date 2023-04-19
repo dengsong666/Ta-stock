@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { chartOptions, seriesOptions } from '@/configs'
+import { useCommon } from '@/store'
 import {
   ChartOptions,
   createChart,
@@ -14,7 +15,7 @@ import {
   Time,
   TimeScaleOptions
 } from 'lightweight-charts'
-
+import { getCurrentInstance } from 'vue'
 const props = withDefaults(
   defineProps<{
     type: SeriesType
@@ -44,6 +45,7 @@ const resizeHandler = () => {
 onMounted(() => {
   const { data, markers, chartOptions, seriesOptions, priceScaleOptions, timeScaleOptions, autosize } = props
   chart = createChart(chartRef.value, chartOptions)
+  useCommon().chart = chart as any
   series = chart![`add${props.type}Series`](seriesOptions)
   series.setData(data)
   markers && series.setMarkers(markers)
@@ -93,7 +95,9 @@ watch(
 </script>
 
 <template>
-  <div class="h50%" ref="chartRef"></div>
+  <div class="h50%" ref="chartRef">
+    <slot></slot>
+  </div>
 </template>
 
 <style scoped></style>

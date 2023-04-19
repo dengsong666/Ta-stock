@@ -17,7 +17,6 @@ async function handleSearch(input: string) {
 async function handleUpdate(value: string) {
   const [name, code] = value.split('-')
   const { data } = await getIndexDay({ name, code })
-  console.log(data)
   emit('index-day', data)
 }
 </script>
