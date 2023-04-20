@@ -32,9 +32,9 @@ onMounted(() => {
   series = chart![`add${props.type}Series`](options.series)
   const lineSeries = chart.addLineSeries({ color: '#2962FF' })
   series.setData(data)
-  lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollLower })))
-  lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollUpper })))
-  console.log(lineSeries)
+  // lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollLower })))
+  // lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollUpper })))
+  // console.log(lineSeries)
 
   markers && series.setMarkers(markers)
   chart.subscribeCrosshairMove((param) => {

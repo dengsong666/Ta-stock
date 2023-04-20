@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { da } from 'date-fns/locale'
 import screenfull from 'screenfull'
 import 'uno.css'
 const index = reactive({
