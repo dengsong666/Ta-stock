@@ -3,7 +3,7 @@ import type { AxiosError, AxiosRequestConfig } from 'axios'
 
 export const service = axios.create({
   baseURL: '/api',
-  timeout: 3000
+  timeout: 30000
 })
 const errors: AnyObj = {
   401: '未授权',
@@ -28,6 +28,7 @@ service.interceptors.request.use(
     // if (token) {
     //   config.headers.Authorization = `Bearer ${token}`;
     // }
+    window.$loading.start()
     return config
   },
   (error: AxiosError) => Promise.reject(error)
@@ -36,6 +37,8 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const { code = 200, msg = '', data = response.data } = response.data
+    // window.$message.success('aaaa')
+    window.$loading.finish()
     if (code === 200) return { code, data, msg } as any
     else {
       // 处理业务错误。

@@ -19,7 +19,7 @@ watch(kChart.crosshair, (val) => console.log(val))
 
 <template>
   <div class="grid-1-9-16 absolute left-12px top-8px z2 c-#fff">
-    <span>日期：{{ kChart.crosshair._internal_originalTime || '--' }}</span>
+    <!-- <span>日期：{{ kChart.crosshair._internal_originalTime || '--' }}</span> -->
     <span>开盘：{{ kChart.crosshair.open || '--' }}</span>
     <span>最高：{{ kChart.crosshair.high || '--' }}</span>
     <span>最低：{{ kChart.crosshair.low || '--' }}</span>

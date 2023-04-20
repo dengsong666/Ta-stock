@@ -1,6 +1,10 @@
 import { ChartOptions, SeriesDataItemTypeMap, SeriesOptions, SeriesOptionsMap, TimeScaleOptions, PriceScaleOptions } from 'lightweight-charts'
-
+import { MessageApiInjection, LoadingBarApiInjection } from 'naive-ui'
 declare global {
+  interface Window {
+    $message: MessageApiInjection
+    $loading: LoadingBarApiInjection
+  }
   type DeepPartial<T> = Partial<{ [P in keyof T]: DeepPartial<T[P]> }>
 
   namespace ChartOption {

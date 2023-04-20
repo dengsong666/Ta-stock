@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { getIndexDay, searchIndex } from '@/apis'
 import { useKChart } from '@/store'
+import { useLoadingBar, useMessage } from 'naive-ui'
 const search = reactive({
   input_value: '',
   loading: false,
   result: [] as { index: string }[]
 })
 const emit = defineEmits(['index-day'])
+window.$message = useMessage()
+window.$loading = useLoadingBar()
 async function handleSearch(input_value: string) {
   if (!input_value) return
   search.loading = true
@@ -18,10 +21,11 @@ async function handleSearch(input_value: string) {
 async function handleUpdate(value: string) {
   const [name, code] = value.split('-')
   const { data } = await getIndexDay({ name, code })
+
   useKChart().list = data
   emit('index-day', data)
 }
-handleUpdate('上证指数-000001')
+handleUpdate('科创50-000688')
 </script>
 
 <template>

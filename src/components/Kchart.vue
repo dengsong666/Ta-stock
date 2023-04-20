@@ -30,15 +30,18 @@ const resizeHandler = () => {
 onMounted(() => {
   chart = createChart(chartRef.value, options.chart)
   series = chart![`add${props.type}Series`](options.series)
+  const lineSeries = chart.addLineSeries({ color: '#2962FF' })
   series.setData(data)
+  lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollLower })))
+  lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollUpper })))
+  console.log(lineSeries)
+
   markers && series.setMarkers(markers)
   chart.subscribeCrosshairMove((param) => {
     // console.log(param)
     // console.log(param.seriesData, series)
     // param.time && (kChart.crosshair = param.seriesData.get(series!) as any)
     if (param.logical) {
-      console.log(kChart.list[param.logical])
-
       param.logical && (kChart.crosshair = kChart.list[param.logical] as any)
     }
   })
@@ -46,6 +49,7 @@ onMounted(() => {
   timeScaleOptions && chart.timeScale().applyOptions(timeScaleOptions)
 
   chart.timeScale().fitContent()
+
   autosize && window.addEventListener('resize', resizeHandler)
 })
 
@@ -88,7 +92,7 @@ watch(
 </script>
 
 <template>
-  <div class="relative h50%" ref="chartRef">
+  <div class="relative h-[calc(100%-60px)]" ref="chartRef">
     <slot></slot>
   </div>
 </template>
