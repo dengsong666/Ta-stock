@@ -7,6 +7,7 @@ from numpy import array
 from sqlalchemy import NVARCHAR, text
 
 from sql.database import engine
+from stock.technical_analysis import boll
 
 
 # 获取中证指数截至前一天每日数据
@@ -31,9 +32,11 @@ def get_day(name, code, start_date='19900101', end_date=(datetime.today() + time
         df.fillna(0, inplace=True)  # 填充剩下的空值
         df.drop_duplicates(subset=['time'], inplace=True)  # 过滤掉重复行
         df.to_csv(path_or_buf=filename, mode=mode, index=False, header=header)
+
     data = pd.read_csv(filepath_or_buffer=filename,
-                       converters={'time': lambda t: f'{t[0: 4]}-{t[4: 6]}-{t[6: 8]}'}).to_dict('records')
-    return data
+                       converters={'time': lambda t: f'{t[0: 4]}-{t[4: 6]}-{t[6: 8]}'})
+    print(boll(data[:10]))
+    return data.to_dict('records')
 
 
 # 存储中证指数
@@ -61,9 +64,8 @@ def save():
 
 
 # 模糊搜索指数
-def search(input):
-    print(input)
+def search(input_value):
     with engine.begin() as conn:
         sql = text(
-            f"select indexName,indexCode from zhongzheng_index where concat(indexName, indexCode) like '%{input}%';")
+            f"select indexName,indexCode from zhongzheng_index where concat(indexName, indexCode) like '%{input_value}%';")
         return conn.execute(sql).mappings().all()
