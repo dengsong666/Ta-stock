@@ -8,6 +8,7 @@ from sqlalchemy import NVARCHAR, text
 
 from sql.database import engine
 from stock.technical_analysis import boll
+import talib as tb
 
 
 # 获取中证指数截至前一天每日数据
@@ -29,13 +30,17 @@ def get_day(name, code, start_date='19900101', end_date=(datetime.today() + time
         drop_col = ['indexCode', 'indexNameCnAll', 'indexNameCn', 'indexNameEnAll', 'indexNameEn']
         df = pd.DataFrame(index).drop(columns=drop_col, errors='ignore').rename(columns={'tradeDate': 'time'})
         df.dropna(how='any', subset=['open', 'high', 'low', 'close'], inplace=True)  # 过滤掉某些列值为空的行
+        df['bollUpper'], df['bollMiddle'], df['bollLower'] = \
+            tb.BBANDS(df['close'], timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)
         df.fillna(0, inplace=True)  # 填充剩下的空值
         df.drop_duplicates(subset=['time'], inplace=True)  # 过滤掉重复行
-        df.to_csv(path_or_buf=filename, mode=mode, index=False, header=header)
+        df.round({'bollUpper': 2, 'bollMiddle': 2, 'bollLower': 2}).to_csv(path_or_buf=filename, mode=mode, index=False, header=header)
 
     data = pd.read_csv(filepath_or_buffer=filename,
                        converters={'time': lambda t: f'{t[0: 4]}-{t[4: 6]}-{t[6: 8]}'})
-    print(boll(data[:10]))
+
+    # ta['boll-m'] = tb.BBANDS(ta['close'], timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)[1]
+    # ta['boll-low'] = tb.BBANDS(ta['close'], timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)[2]
     return data.to_dict('records')
 
 

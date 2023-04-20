@@ -15,9 +15,10 @@ from talib import BBANDS
 # 布林带
 def boll(olhc):
     up, middle, low = BBANDS(olhc['close'], timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)
+    print(up)
     # ch = (up - low) / middle
     # delta = np.r_[np.nan, np.diff(ch)]
-    data = dict(upper=up, middle=middle, lower=low)
-    df = pd.DataFrame(data, index=df.index, columns=['upper', 'middle', 'lower']).dropna()
-    print(up, middle, low, ch, delta)
+    # data = dict(upper=up, middle=middle, lower=low)
+    # df = pd.DataFrame(data, index=df.index, columns=['upper', 'middle', 'lower']).dropna()
+    # print(up, middle, low, ch, delta)
 
