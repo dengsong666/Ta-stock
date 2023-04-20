@@ -1,7 +1,7 @@
 import http from './http'
 import { StockIndex, StockIndexDay } from './types/stock'
 
-export function searchIndex(params: { input: string }) {
+export function searchIndex(params: { input_value: string }) {
   return http.get<StockIndex[]>({
     url: '/stock-index/search',
     params

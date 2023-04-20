@@ -2,15 +2,15 @@
 import { getIndexDay, searchIndex } from '@/apis'
 import { useKChart } from '@/store'
 const search = reactive({
-  input: '',
+  input_value: '',
   loading: false,
   result: [] as { index: string }[]
 })
 const emit = defineEmits(['index-day'])
-async function handleSearch(input: string) {
-  if (!input) return
+async function handleSearch(input_value: string) {
+  if (!input_value) return
   search.loading = true
-  const { data } = await searchIndex({ input })
+  const { data } = await searchIndex({ input_value })
   search.loading = false
   search.result = data.map(({ indexName, indexCode }) => ({ index: `${indexName}-${indexCode}` }))
 }
@@ -26,7 +26,8 @@ handleUpdate('上证指数-000001')
 
 <template>
   <n-select
-    v-model:value="search.input"
+    class="w20%"
+    v-model:value="search.input_value"
     filterable
     placeholder="搜索股票指数"
     label-field="index"
