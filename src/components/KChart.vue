@@ -5,7 +5,7 @@ import { createChart, IChartApi, ISeriesApi, SeriesMarker, SeriesType, Time } fr
 const props = defineProps<{
   type: SeriesType
   data: ChartOption.Data
-  markers?: SeriesMarker<string>[]
+  markers?: SeriesMarker<Time>[]
   chartOptions?: ChartOption.Base
   autosize?: boolean
   seriesOptions?: ChartOption.Series
@@ -68,6 +68,15 @@ watch(
 watch(
   () => props.data,
   (newData) => series && series.setData(newData)
+)
+watch(
+  () => props.markers,
+  (newData) => {
+    console.log(newData)
+
+    series && newData && series.setMarkers(newData)
+  },
+  { deep: true }
 )
 
 watch(

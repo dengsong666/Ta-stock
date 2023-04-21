@@ -21,9 +21,38 @@ async function handleSearch(input_value: string) {
 async function handleUpdate(value: string) {
   const [name, code] = value.split('-')
   const { data } = await getIndexDay({ name, code })
-
+  handleIndexDay(data)
   useKChart().list = data
   emit('index-day', data)
+}
+function handleIndexDay(index_day: never[]) {
+  index.data = index_day
+  index_day.forEach((item) => {
+    const { time, close, bollLower, bollMiddle, bollUpper, slowK, slowD, slowJ } = item as any
+    const bollPB = (close - bollLower) / (bollUpper - bollLower)
+    // console.log(close, bollLower, bollUpper, bollPB)
+    let marker
+    if (bollPB < 0 && slowK <= 20 && slowD <= 20 && slowJ <= 20) {
+      marker = {
+        time,
+        position: 'belowBar',
+        color: '#2196F3',
+        shape: 'arrowUp',
+        text: '买'
+      }
+    }
+    if (bollPB > 1 && slowK >= 80 && slowD >= 80 && slowJ >= 80) {
+      marker = {
+        time,
+        position: 'aboveBar',
+        color: '#e91e63',
+        shape: 'arrowDown',
+        text: '卖'
+      }
+    }
+    marker && index.markers.push(marker)
+  })
+  console.log(index.markers)
 }
 handleUpdate('科创50-000688')
 </script>

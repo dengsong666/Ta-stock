@@ -19,14 +19,14 @@ watch(kChart.crosshair, (val) => console.log(val))
 
 <template>
   <div class="grid-1-9-16 absolute left-12px top-8px z2 c-#fff">
-    <!-- <span>日期：{{ kChart.crosshair._internal_originalTime || '--' }}</span> -->
-    <span>开盘：{{ kChart.crosshair.open || '--' }}</span>
-    <span>最高：{{ kChart.crosshair.high || '--' }}</span>
-    <span>最低：{{ kChart.crosshair.low || '--' }}</span>
-    <span>收盘：{{ kChart.crosshair.close }}</span>
-    <span>涨跌幅：{{ kChart.crosshair.changePct || '--' }}%</span>
-    <span>成交量：{{ kChart.crosshair.tradingVol || '--' }}</span>
-    <span>滚动市盈率{{ kChart.crosshair.peg || '--' }}</span>
+    <span>日期：{{ kChart.crosshair?._internal_originalTime || '--' }}</span>
+    <span>开盘：{{ kChart.crosshair?.open || '--' }}</span>
+    <span>最高：{{ kChart.crosshair?.high || '--' }}</span>
+    <span>最低：{{ kChart.crosshair?.low || '--' }}</span>
+    <span>收盘：{{ kChart.crosshair?.close || '--' }}</span>
+    <span>涨跌幅：{{ kChart.crosshair?.changePct || '--' }}%</span>
+    <span>成交量：{{ kChart.crosshair?.tradingVol || '--' }}</span>
+    <span>滚动市盈率{{ kChart.crosshair?.peg || '--' }}</span>
   </div>
 </template>
 
