@@ -1,18 +1,16 @@
 <script setup lang="ts">
+import { useKChart } from '@/store'
 import screenfull from 'screenfull'
-const indicator = reactive({
-  value: [],
-  options: ['KDJ', 'BOLL']
-})
+const isFullscreen = ref(screenfull.isFullscreen)
 </script>
 
 <template>
   <div class="flex-row items-center px24px h60px">
-    <slot></slot>
-    <n-checkbox-group v-model:value="indicator.value">
-      <n-checkbox v-for="v in indicator.options" :value="v" :label="v" />
-    </n-checkbox-group>
-    <i @click="screenfull.toggle()" class="ml-auto i-my-full-screen"></i>
+    <Filter />
+    <Search v-bind="$attrs" />
+    <span class="grid-1-2-8 mlauto">
+      <i @click="screenfull.toggle(), (isFullscreen = !isFullscreen)" :class="`${isFullscreen ? 'i-my-full-screen-exit' : 'i-my-full-screen'}`"></i>
+    </span>
   </div>
 </template>
 

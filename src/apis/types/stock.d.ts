@@ -16,5 +16,10 @@ export interface StockIndexDay {
   time: string
   tradingValue: number
   tradingVol: number
+  bollLower: number
+  bollUpper: number
+  slowK: number
+  slowD: number
+  slowJ: number
   _internal_originalTime: string
 }

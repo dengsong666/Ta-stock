@@ -10,4 +10,4 @@ export const useCommon = defineStore('common', {
     Func() {}
   }
 })
-export * from './chart'
+export * from './kchart'

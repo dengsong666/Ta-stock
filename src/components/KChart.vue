@@ -5,7 +5,6 @@ import { createChart, IChartApi, ISeriesApi, SeriesMarker, SeriesType, Time } fr
 const props = defineProps<{
   type: SeriesType
   data: ChartOption.Data
-  markers?: SeriesMarker<Time>[]
   chartOptions?: ChartOption.Base
   autosize?: boolean
   seriesOptions?: ChartOption.Series
@@ -13,7 +12,7 @@ const props = defineProps<{
   priceScaleOptions?: ChartOption.PriceScale
 }>()
 const kChart = useKChart()
-const { data, markers, chartOptions, seriesOptions, priceScaleOptions, timeScaleOptions, autosize } = props
+const { data, chartOptions, seriesOptions, priceScaleOptions, timeScaleOptions, autosize } = props
 const options = reactive({
   chart: { ...defaultChartOptions, ...chartOptions, ...kChart.option.chart },
   series: { ...defaultSeriesOptions, ...seriesOptions, ...kChart.option.series }
@@ -35,11 +34,7 @@ onMounted(() => {
   // lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollLower })))
   // lineSeries.setData(data.map((item) => ({ time: item.time, value: item.bollUpper })))
   // console.log(lineSeries)
-
-  markers && series.setMarkers(markers)
   chart.subscribeCrosshairMove((param) => {
-    // console.log(param)
-    // console.log(param.seriesData, series)
     // param.time && (kChart.crosshair = param.seriesData.get(series!) as any)
     if (param.logical) {
       param.logical && (kChart.crosshair = kChart.list[param.logical] as any)
@@ -67,14 +62,18 @@ watch(
 
 watch(
   () => props.data,
-  (newData) => series && series.setData(newData)
+  (newData) => {
+    if (series) {
+      series.setData(newData)
+
+      series.setMarkers(kChart.calculate(kChart.indicator, newData as any))
+    }
+  }
 )
 watch(
-  () => props.markers,
+  () => kChart.indicator,
   (newData) => {
-    console.log(newData)
-
-    series && newData && series.setMarkers(newData)
+    series && series.setMarkers(kChart.calculate(newData, props.data as any))
   },
   { deep: true }
 )

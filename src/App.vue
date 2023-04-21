@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import 'uno.css'
-const index = reactive({
+import { useKChart } from './store'
+const kchart = reactive({
   data: [],
   markers: []
 })
@@ -9,8 +10,8 @@ const index = reactive({
 <template>
   <n-loading-bar-provider>
     <n-message-provider>
-      <Topbar><Search @index-day="" /></Topbar>
-      <KChart type="Candlestick" :data="index.data" :markers="index.markers" autosize>
+      <Topbar @k-data="kchart.data = $event" />
+      <KChart type="Candlestick" :data="kchart.data" autosize>
         <KLegends />
       </KChart>
     </n-message-provider>

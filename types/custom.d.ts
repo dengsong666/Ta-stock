@@ -10,6 +10,7 @@ declare global {
   namespace ChartOption {
     type Base = DeepPartial<ChartOptions>
     type Data = SeriesDataItemTypeMap[keyof SeriesDataItemTypeMap][]
+    type Marker = SeriesMarker<Time>
     type Series = DeepPartial<SeriesOptions<SeriesOptionsMap[keyof SeriesOptionsMap]>>
     type TimeScale = DeepPartial<TimeScaleOptions>
     type PriceScale = DeepPartial<PriceScaleOptions>
