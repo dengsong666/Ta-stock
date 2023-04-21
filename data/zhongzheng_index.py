@@ -31,10 +31,16 @@ def get_day(name, code, start_date='19900101', end_date=(datetime.today() + time
         df = pd.DataFrame(index).drop(columns=drop_col, errors='ignore').rename(columns={'tradeDate': 'time'})
         df.dropna(how='any', subset=['open', 'high', 'low', 'close'], inplace=True)  # 过滤掉某些列值为空的行
         df['bollUpper'], df['bollMiddle'], df['bollLower'] = \
-            tb.BBANDS(df['close'], timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)
+            tb.BBANDS(df['close'], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
+
+        df['slowK'], df['slowD'] = tb.STOCH(df['high'], df['low'], df['close'], fastk_period=9, slowk_period=5,
+                                            slowk_matype=1, slowd_period=5, slowd_matype=1)
+        df['slowJ'] = list(map(lambda x, y: 3 * x - 2 * y, df['slowK'], df['slowD']))
         df.fillna(0, inplace=True)  # 填充剩下的空值
         df.drop_duplicates(subset=['time'], inplace=True)  # 过滤掉重复行
-        df.round({'bollUpper': 2, 'bollMiddle': 2, 'bollLower': 2}).to_csv(path_or_buf=filename, mode=mode, index=False, header=header)
+        df.round({'bollUpper': 2, 'bollMiddle': 2, 'bollLower': 2, 'slowK': 2, 'slowD': 2, 'slowJ': 2}).to_csv(
+            path_or_buf=filename, mode=mode, index=False,
+            header=header)
 
     data = pd.read_csv(filepath_or_buffer=filename,
                        converters={'time': lambda t: f'{t[0: 4]}-{t[4: 6]}-{t[6: 8]}'})
