@@ -36,6 +36,8 @@ def get_day(name, code, start_date='19900101', end_date=(datetime.today() + time
         df['slowK'], df['slowD'] = tb.STOCH(df['high'], df['low'], df['close'], fastk_period=9, slowk_period=5,
                                             slowk_matype=1, slowd_period=5, slowd_matype=1)
         df['slowJ'] = list(map(lambda x, y: 3 * x - 2 * y, df['slowK'], df['slowD']))
+        # df['dif'], df['dea'], df['macd'] = tb.MACD(df['close'], fastperiod=12, slowperiod=26, signalperiod=9)
+        tb.stream_CDLSHORTLINE()
         df.fillna(0, inplace=True)  # 填充剩下的空值
         df.drop_duplicates(subset=['time'], inplace=True)  # 过滤掉重复行
         df.round({'bollUpper': 2, 'bollMiddle': 2, 'bollLower': 2, 'slowK': 2, 'slowD': 2, 'slowJ': 2}).to_csv(
