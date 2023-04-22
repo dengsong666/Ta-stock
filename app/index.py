@@ -29,16 +29,18 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
                 ZHONGZHENG_PARAMS = {'indexCode': code, 'startDate': start_date.replace('-', ''),
                                      'endDate': end_date.replace('-', '')}
                 z_index = requests.get(ZHONGZHENG_API, ZHONGZHENG_PARAMS).json().get('data')
-                df = pd.DataFrame(z_index)[['tradeDate', 'open', 'close', 'high', 'low', 'tradingVol']]
+                df = pd.DataFrame(z_index)[
+                    ['tradeDate', 'open', 'close', 'high', 'low', 'change', 'changePct', 'tradingVol']]
                 df['tradeDate'].apply(lambda t: datetime.strptime(t, "%Y%m%d").strftime('%Y-%m-%d'))
             elif source == 'G':
                 GUOZHENG_API = "http://hq.cnindex.com.cn/market/market/getIndexDailyData"
                 GUOZHENG_PARAMS = {'indexCode': code, 'startDate': start_date, 'endDate': end_date}
                 g_index = requests.get(GUOZHENG_API, GUOZHENG_PARAMS).json().get('data').get('data')
                 # timestamp,current,high,open,low,close,chg,percent,amount,volume,avg
-                df = pd.DataFrame(g_index)[[0, 3, 5, 2, 4, 9]]
+                df = pd.DataFrame(g_index)[[0, 3, 5, 2, 4, 6, 7, 9]]
+                df[7] = df[7] * 100
                 df[0] = df[0].apply(lambda t: datetime.fromtimestamp(t / 1000).strftime('%Y-%m-%d'))
-            df.columns = ['time', 'open', 'close', 'high', 'low', 'vol']
+            df.columns = ['time', 'open', 'close', 'high', 'low', 'chg', 'chgp', 'vol']
             # 预处理
             df.dropna(how='any', subset=['open', 'high', 'low', 'close'], inplace=True)  # 过滤掉某些列值为空的行
             df.drop_duplicates(subset=['time'], inplace=True)  # 过滤掉重复行
@@ -78,8 +80,9 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
             df['eneUpper'] = (1 + M1 / 100) * tb.MA(df['close'], N)
             df['eneLower'] = (1 - M1 / 100) * tb.MA(df['close'], N)
             df.fillna(0, inplace=True)  # 填充剩下的空值
-            df.round({'bollUpper': 2, 'bollMiddle': 2, 'bollLower': 2, 'slowK': 2, 'slowD': 2, 'slowJ': 2, 'eneUpper': 2,
-                      'eneLower': 2}).to_csv(
+            df.round(
+                {'bollUpper': 2, 'bollMiddle': 2, 'bollLower': 2, 'slowK': 2, 'slowD': 2, 'slowJ': 2, 'eneUpper': 2,
+                 'eneLower': 2}).to_csv(
                 path_or_buf=filename, mode=mode, index=False,
                 header=header)
     finally:
