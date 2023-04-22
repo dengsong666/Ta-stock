@@ -52,6 +52,7 @@ export default defineConfig({
     ['absolute-center', { position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }],
     ['nowrap', { 'white-space': 'nowrap' }],
     ['pointer-events', { 'white-space': 'nowrap' }],
+    ['elp', { 'white-space': 'nowrap', overflow: 'hidden', 'text-overflow': 'ellipsis' }],
     [/^pointer-(\w+)$/, ([, w]) => ({ 'pointer-events': w })],
     [/^wh-(\d+)(\w+|%)$/, ([, d, w]) => ({ width: `${d + w}`, height: `${d + w}` })],
     [/^bd-(\d+)-(#\w+)$/, ([, d, w]) => ({ border: `${d}px solid ${w}` })],

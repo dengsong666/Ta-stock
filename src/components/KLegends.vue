@@ -25,7 +25,7 @@ watch(kChart.crosshair, (val) => console.log(val))
     <span>最低：{{ kChart.crosshair?.low || '--' }}</span>
     <span>收盘：{{ kChart.crosshair?.close || '--' }}</span>
     <span>涨跌幅：{{ kChart.crosshair.chgp || '--' }}%</span>
-    <span>成交量：{{ kChart.crosshair?.vol || '--' }}</span>
+    <span>成交量：{{ kChart.crosshair?.vol || '--' }}万手</span>
   </div>
 </template>
 
