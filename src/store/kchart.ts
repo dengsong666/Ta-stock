@@ -5,13 +5,10 @@ export const useKChart = defineStore('k-chart', {
     crosshair: {} as StockIndexDay,
     markers: [],
     indicator: {
-      checked: ['KDJ', 'BOLL'],
-      kdj: {
-        k: [20, 80],
-        d: [20, 80],
-        j: [20, 80]
-      },
-      boll: [0, 1]
+      checked: ['KDJ', 'BOLL', 'TD9'],
+      kdj: 20,
+      boll: 0,
+      ene: 0
     },
     option: {
       chart: {} as ChartOption.Base,
@@ -20,7 +17,7 @@ export const useKChart = defineStore('k-chart', {
   }),
   actions: {
     calculate(indicator: typeof this.indicator, data: StockIndexDay[]) {
-      const { boll, kdj, checked } = indicator
+      const { boll, kdj, ene, checked } = indicator
       let markers: any[] = []
       /**
        * 0 卖
@@ -28,19 +25,26 @@ export const useKChart = defineStore('k-chart', {
        * 2 不买不卖
        */
       data.forEach((item) => {
-        const { time, close, bollLower, bollUpper, slowK, slowD, slowJ, _internal_originalTime } = item
+        const { time, close, bollLower, bollUpper, slowK, slowD, slowJ, _internal_originalTime, td9, eneLower, eneUpper } = item
         const bollPB = (close - bollLower) / (bollUpper - bollLower)
-        const isBuy: { [key: string]: number } = { BOLL: 2, KDJ: 2 }
+        const isBuy = { BOLL: 2, KDJ: 2, TD9: 2, ENE: 2 }
         // 计算买点
         if (checked.includes('BOLL')) {
-          if (bollPB <= boll[0]) isBuy.BOLL = 1
-          if (bollPB > boll[1]) isBuy.BOLL = 0
+          if (close - bollLower <= boll && bollLower) isBuy.BOLL = 1
+          if (bollUpper - close <= boll && bollUpper) isBuy.BOLL = 0
+        }
+        if (checked.includes('ENE')) {
+          if (close - eneLower <= ene && eneLower) isBuy.ENE = 1
+          if (eneUpper - close <= ene && eneUpper) isBuy.ENE = 0
         }
         if (checked.includes('KDJ')) {
-          if (slowK <= kdj.k[0] && slowD <= kdj.d[0] && slowJ <= kdj.j[0]) isBuy.KDJ = 1
-          if (slowK > kdj.k[1] && slowD > kdj.d[1] && slowJ > kdj.j[1]) isBuy.KDJ = 0
+          if (slowK <= kdj && slowD <= kdj && slowJ <= kdj) isBuy.KDJ = 1
+          if (slowK > 100 - kdj && slowD > 100 - kdj && slowJ > 100 - kdj) isBuy.KDJ = 0
         }
-        if (checked.every((item) => isBuy[item] == 1)) {
+        if (checked.includes('TD9')) isBuy.TD9 = td9
+
+        type C = keyof typeof isBuy
+        if (checked.length && checked.every((item) => isBuy[item as C] == 1)) {
           markers.push({
             time: _internal_originalTime,
             position: 'belowBar',
@@ -49,7 +53,7 @@ export const useKChart = defineStore('k-chart', {
             text: '买'
           })
         }
-        if (checked.every((item) => isBuy[item] == 0)) {
+        if (checked.length && checked.every((item) => isBuy[item as C] == 0)) {
           markers.push({
             time,
             position: 'aboveBar',

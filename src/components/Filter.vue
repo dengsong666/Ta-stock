@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useKChart } from '@/store'
-const indicator = ['MACD', 'KDJ', 'RSI', 'BOLL', '九转序列']
+const indicator = ['MACD', 'KDJ', 'RSI', 'BOLL', 'TD9', 'ENE']
 const kChart = useKChart()
 const visible = ref(false)
 </script>
@@ -14,14 +14,13 @@ const visible = ref(false)
       </n-checkbox-group>
       <n-form ref="formRef" :model="kChart.indicator">
         <n-form-item v-show="kChart.indicator.checked.includes('KDJ')" label="KDJ">
-          <div class="grid-1-3-16 w100%">
-            <span class="text-center">k<n-slider v-model:value="kChart.indicator.kdj.k" range :step="1" /> </span>
-            <span class="text-center">d<n-slider v-model:value="kChart.indicator.kdj.d" range :step="1" /> </span>
-            <span class="text-center">j<n-slider v-model:value="kChart.indicator.kdj.j" range :step="1" /></span>
-          </div>
+          <n-slider v-model:value="kChart.indicator.kdj" :step="1" :max="30" />
         </n-form-item>
-        <n-form-item v-show="kChart.indicator.checked.includes('BOLL')" label="BOLL" path="user.phone">
-          <n-slider v-model:value="kChart.indicator.boll" range :min="-0.5" :max="1.5" :step="0.1" />
+        <n-form-item v-show="kChart.indicator.checked.includes('BOLL')" label="BOLL">
+          <n-slider v-model:value="kChart.indicator.boll" :step="1" :max="100" />
+        </n-form-item>
+        <n-form-item v-show="kChart.indicator.checked.includes('ENE')" label="ENE">
+          <n-slider v-model:value="kChart.indicator.ene" :step="1" :max="200" />
         </n-form-item>
       </n-form>
     </n-drawer-content>
@@ -33,10 +32,10 @@ const visible = ref(false)
 // :deep(.n-form-item-blank) {
 //   width: 100%;
 // }
-.n-slider :deep(.n-slider-rail) {
-  background-color: #18a058;
-  & .n-slider-rail__fill {
-    background-color: #dadadd;
-  }
-}
+// .n-slider :deep(.n-slider-rail) {
+//   background-color: #18a058;
+//   & .n-slider-rail__fill {
+//     background-color: #dadadd;
+//   }
+// }
 </style>

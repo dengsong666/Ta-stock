@@ -7,7 +7,7 @@ export function searchIndex(params: { input_value: string }) {
     params
   })
 }
-export function getIndexDay(params: { name: string; code: string }) {
+export function getIndexDay(params: { name: string; code: string; source: string }) {
   return http.get<StockIndexDay[]>({
     url: '/stock-index/get-day',
     params

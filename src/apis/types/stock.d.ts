@@ -1,25 +1,28 @@
 export interface StockIndex {
-  consNumber: string
-  indexCode: string
-  indexName: string
-  publishDate: string
+  code: string
+  name: string
+  series: string
+  classify: string
+  size: number
+  source: string
 }
 export interface StockIndexDay {
-  change: number
-  changePct: number
+  time: string
+  open: number
   close: number
-  consNumber: number
   high: number
   low: number
-  open: number
-  peg: number
-  time: string
-  tradingValue: number
-  tradingVol: number
+  chg: number
+  chgp: number
+  vol: number
   bollLower: number
   bollUpper: number
+  eneUpper: number
+  eneLower: number
+  td9: number
   slowK: number
   slowD: number
   slowJ: number
+
   _internal_originalTime: string
 }
