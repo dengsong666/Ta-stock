@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import talib
+import talib as tb
 from talib import BBANDS
 
 
@@ -12,13 +12,9 @@ from talib import BBANDS
 # print(all_ta_groups)
 
 
-# 布林带
-def boll(olhc):
-    up, middle, low = BBANDS(olhc['close'], timeperiod=5, nbdevup=2, nbdevdn=2, matype=0)
-    print(up)
-    # ch = (up - low) / middle
-    # delta = np.r_[np.nan, np.diff(ch)]
-    # data = dict(upper=up, middle=middle, lower=low)
-    # df = pd.DataFrame(data, index=df.index, columns=['upper', 'middle', 'lower']).dropna()
-    # print(up, middle, low, ch, delta)
+# 轨道线
+def ene(close,N=25,M1=6,M2=6):
+
+    UPPER =  (1 + M1 / 100) * tb.MA(close,N)
+    LOWER = (1 - M2 / 100) * tb.MA(close, N);
 
