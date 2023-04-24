@@ -8,7 +8,8 @@ export const useKChart = defineStore('k-chart', {
       checked: ['KDJ', 'BOLL', 'TD9'],
       kdj: 20,
       boll: 0,
-      ene: 0
+      ene: 0,
+      td9: [8, 13]
     },
     option: {
       chart: {} as ChartOption.Base,
@@ -41,7 +42,7 @@ export const useKChart = defineStore('k-chart', {
           if (slowK <= kdj && slowD <= kdj && slowJ <= kdj) isBuy.KDJ = 1
           if (slowK > 100 - kdj && slowD > 100 - kdj && slowJ > 100 - kdj) isBuy.KDJ = 0
         }
-        if (checked.includes('TD9')) isBuy.TD9 = td9
+        if (checked.includes('TD9')) isBuy.TD9 = indicator.td9.includes(td9 < 0 ? -td9 : td9) ? 1 : 0
 
         type C = keyof typeof isBuy
         if (checked.length && checked.every((item) => isBuy[item as C] == 1)) {

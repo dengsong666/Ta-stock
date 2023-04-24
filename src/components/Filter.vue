@@ -22,6 +22,9 @@ const visible = ref(false)
         <n-form-item v-show="kChart.indicator.checked.includes('ENE')" label="ENE">
           <n-slider v-model:value="kChart.indicator.ene" :step="1" :max="200" />
         </n-form-item>
+        <n-form-item v-show="kChart.indicator.checked.includes('TD9')" label="TD9">
+          <n-slider v-model:value="kChart.indicator.td9" range :step="1" :min="1" :max="13" />
+        </n-form-item>
       </n-form>
     </n-drawer-content>
   </n-drawer>
