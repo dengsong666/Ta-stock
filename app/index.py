@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import pandas as pd
 import talib as tb
@@ -12,6 +14,7 @@ from sql.database import engine
 
 # 获取指数截至前一天每日数据
 def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today().strftime('%Y-%m-%d'), path="./"):
+    s = time.perf_counter()
     filename = f"{path}data/{name}-{code}.csv"
     print(filename)
     mode = 'w'
@@ -93,10 +96,14 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
                 path_or_buf=filename, mode=mode, index=False,
                 header=header)
     data = pd.read_csv(filepath_or_buffer=filename)
+    e = time.perf_counter()
+    print(s-e)
     return data.to_dict('records')
     # try:
     #
     # finally:
+
+# get_day('云计算', '930851', 'Z', path='../')
 
 
 # 存储指数
@@ -139,6 +146,8 @@ def save():
     with engine.connect() as con:
         con.execute(text("alter table stock_index add primary key (code);"))
 
+
+# save()
 
 # 模糊搜索指数
 def search(input_value):

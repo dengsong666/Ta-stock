@@ -1,3 +1,6 @@
+import pandas as pd
+import time
+
 import numpy as np
 import polars as pl
 import talib as tb
@@ -13,13 +16,15 @@ from sql.database import engine
 
 # 获取指数截至前一天每日数据
 def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today().strftime('%Y-%m-%d'), path="./"):
+    s = time.perf_counter()
+    print(s)
     filename = f"{path}data/{name}-{code}.csv"
     print(filename)
-    mode = 'w'
+    mode = 'wb'
     header = True
     is_save = True
     if os.path.exists(filename) and os.path.getsize(filename):
-        mode = 'a'
+        mode = 'ab'
         header = False
         last_date = f"{pl.read_csv(filename).tail(1)['time'][0]}"
         print(last_date)
@@ -31,7 +36,6 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
                 ZHONGZHENG_API = "https://www.csindex.com.cn/csindex-home/perf/index-perf"
                 ZHONGZHENG_PARAMS = {'indexCode': code, 'startDate': start_date.replace('-', ''),
                                      'endDate': end_date.replace('-', '')}
-                # print(requests.get(ZHONGZHENG_API, ZHONGZHENG_PARAMS).text)
                 z_index = crawler(ZHONGZHENG_API, ZHONGZHENG_PARAMS)
                 if not z_index: break
                 df = pl.from_dicts(z_index, infer_schema_length=None).select(
@@ -44,11 +48,13 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
                 g_index = crawler(GUOZHENG_API, GUOZHENG_PARAMS).get('data')
                 if not g_index: break
                 # timestamp,current,high,open,low,close,chg,percent,amount,volume,avg
-                df = pl.DataFrame(g_index)[[0, 3, 5, 2, 4, 6, 7, 9]]
-                df[7] = (df[7] * 100).round(2)
-                df[9] = (df[9] / 1000000).round(2)
-                df[0] = df[0].apply(lambda t: datetime.fromtimestamp(t / 1000).strftime('%Y-%m-%d'))
-
+                # ['timestamp', 'current', 'high', 'open', 'low', 'close', 'chg', 'percent', 'amount', 'volume', 'avg']
+                df = pl.from_records(g_index, orient='row',
+                                     schema=['timestamp', 'current', 'high', 'open', 'low', 'close', 'chg', 'percent',
+                                             'amount', 'volume', 'avg']).select(
+                    ['timestamp', 'open', 'close', 'high', 'low', 'chg', 'percent', 'volume']).with_columns(
+                    pl.col('timestamp').apply(lambda t: datetime.fromtimestamp(t / 1000).strftime('%Y-%m-%d')),
+                    pl.col('percent') * 100, pl.col('volume') / 1000)
             df.columns = ['time', 'open', 'close', 'high', 'low', 'chg', 'chgp', 'vol']
             # 预处理
             df = df.drop_nulls(['open', 'high', 'low', 'close'])
@@ -56,13 +62,13 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
             if df.is_empty(): break
             # BOLL
             df = df.with_columns(pl.DataFrame(tb.BBANDS(df['close'], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0),
-                                              schema=['bollUpper', 'bollMiddle', 'bollLower']), )
-
+                                              schema=['bollUpper', 'bollMiddle', 'bollLower']))
             # KDJ
             df = df.with_columns(
                 pl.DataFrame(tb.STOCH(df['high'], df['low'], df['close'], fastk_period=9, slowk_period=5,
                                       slowk_matype=1, slowd_period=5, slowd_matype=1), schema=['slowK', 'slowD']), )
             df = df.with_columns(slowJ=3 * pl.col('slowK') - 2 * pl.col('slowD'))
+
             # 九转序列
             df = td9(df)
             # ENE 轨道线
@@ -70,21 +76,19 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
             df = df.with_columns(eneUpper=(1 + M1 / 100) * tb.MA(df['close'], N),
                                  eneLower=(1 - M1 / 100) * tb.MA(df['close'], N))
 
-            print(df)
-            df.fillna(0, inplace=True)  # 填充剩下的空值
-            df.round(
-                {'bollUpper': 2, 'bollMiddle': 2, 'bollLower': 2, 'slowK': 2, 'slowD': 2, 'slowJ': 2, 'eneUpper': 2,
-                 'eneLower': 2}).to_csv(
-                path_or_buf=filename, mode=mode, index=False,
-                header=header)
+            df = df.fill_nan(0).fill_null(0)
+            with open(filename, mode=mode) as f:
+                df.write_csv(f, has_header=header, float_precision=2)
     data = pl.read_csv(filename)
-    return data.to_dict('records')
+    e = time.perf_counter()
+    print(s - e)
+    return data.to_dicts()
     # try:
     #
     # finally:
 
 
-get_day('云计算', '930851', 'Z', path='../')
+# get_day('创业板指', '399006', 'G', path='../')
 
 
 # 存储指数
