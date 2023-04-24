@@ -5,46 +5,53 @@ import requests
 import os
 from datetime import timedelta, datetime
 from sqlalchemy import NVARCHAR, text
+
+from helper.my_http import crawler
 from sql.database import engine
 
 
 # 获取指数截至前一天每日数据
-def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today().strftime('%Y-%m-%d')):
-    filename = f"data/{name}-{code}.csv"
+def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today().strftime('%Y-%m-%d'), path="./"):
+    filename = f"{path}data/{name}-{code}.csv"
+    print(filename)
     mode = 'w'
     header = True
     is_save = True
-    # pd.set_option('display.max_rows', None)
-    try:
-        if os.path.exists(filename) and os.path.getsize(filename):
-            mode = 'a'
-            header = False
-            last_date = f"{pd.read_csv(filename).tail(1)['time'].reset_index(drop=True)[0]}"
-            if last_date == end_date: is_save = False
-            start_date = (datetime.strptime(last_date, "%Y-%m-%d") + timedelta(1)).strftime('%Y-%m-%d')
-        # print(start_date, end_date)
+    pd.set_option('display.max_rows', None)
+    if os.path.exists(filename) and os.path.getsize(filename):
+        mode = 'a'
+        header = False
+        last_date = f"{pd.read_csv(filename).tail(1)['time'].reset_index(drop=True)[0]}"
+        if last_date == end_date: is_save = False
+        start_date = (datetime.strptime(last_date, "%Y-%m-%d") + timedelta(1)).strftime('%Y-%m-%d')
+    for x in range(1):
         if is_save:
             if source == 'Z':
                 ZHONGZHENG_API = "https://www.csindex.com.cn/csindex-home/perf/index-perf"
                 ZHONGZHENG_PARAMS = {'indexCode': code, 'startDate': start_date.replace('-', ''),
                                      'endDate': end_date.replace('-', '')}
-                z_index = requests.get(ZHONGZHENG_API, ZHONGZHENG_PARAMS).json().get('data')
+                # print(requests.get(ZHONGZHENG_API, ZHONGZHENG_PARAMS).text)
+                z_index = crawler(ZHONGZHENG_API, ZHONGZHENG_PARAMS)
+                if not z_index: break
                 df = pd.DataFrame(z_index)[
                     ['tradeDate', 'open', 'close', 'high', 'low', 'change', 'changePct', 'tradingVol']]
-                df['tradeDate'].apply(lambda t: datetime.strptime(t, "%Y%m%d").strftime('%Y-%m-%d'))
+                df['tradeDate'] = df['tradeDate'].apply(lambda t: datetime.strptime(t, "%Y%m%d").strftime('%Y-%m-%d'))
             elif source == 'G':
                 GUOZHENG_API = "http://hq.cnindex.com.cn/market/market/getIndexDailyData"
                 GUOZHENG_PARAMS = {'indexCode': code, 'startDate': start_date, 'endDate': end_date}
-                g_index = requests.get(GUOZHENG_API, GUOZHENG_PARAMS).json().get('data').get('data')
+                g_index = crawler(GUOZHENG_API, GUOZHENG_PARAMS).get('data')
+                if not g_index: break
                 # timestamp,current,high,open,low,close,chg,percent,amount,volume,avg
                 df = pd.DataFrame(g_index)[[0, 3, 5, 2, 4, 6, 7, 9]]
-                df[7] = df[7] * 100
+                df[7] = (df[7] * 100).round(2)
+                df[9] = (df[9] / 1000000).round(2)
                 df[0] = df[0].apply(lambda t: datetime.fromtimestamp(t / 1000).strftime('%Y-%m-%d'))
             df.columns = ['time', 'open', 'close', 'high', 'low', 'chg', 'chgp', 'vol']
             # 预处理
             df.dropna(how='any', subset=['open', 'high', 'low', 'close'], inplace=True)  # 过滤掉某些列值为空的行
             df.drop_duplicates(subset=['time'], inplace=True)  # 过滤掉重复行
             df.reset_index(drop=True, inplace=True)  # 重排索引
+            if df.empty: break
             # BOLL
             df['bollUpper'], df['bollMiddle'], df['bollLower'] = \
                 tb.BBANDS(df['close'], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
@@ -85,9 +92,11 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
                  'eneLower': 2}).to_csv(
                 path_or_buf=filename, mode=mode, index=False,
                 header=header)
-    finally:
-        data = pd.read_csv(filepath_or_buffer=filename)
-        return data.to_dict('records')
+    data = pd.read_csv(filepath_or_buffer=filename)
+    return data.to_dict('records')
+    # try:
+    #
+    # finally:
 
 
 # 存储指数

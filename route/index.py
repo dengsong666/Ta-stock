@@ -15,7 +15,6 @@ router = APIRouter(
 # 查询指数
 @router.get('/search')
 async def search(input_value):
-    print(input_value)
     return index.search(input_value)
 
 
@@ -23,3 +22,4 @@ async def search(input_value):
 @router.get('/get-day')
 async def save(name, code, source):
     return index.get_day(name, code, source)
+
