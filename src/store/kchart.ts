@@ -1,4 +1,5 @@
 import { StockIndexDay } from '@/apis/types/stock'
+import {} from '@/utils'
 export const useKChart = defineStore('k-chart', {
   state: () => ({
     list: [] as StockIndexDay[],
@@ -18,7 +19,7 @@ export const useKChart = defineStore('k-chart', {
   }),
   actions: {
     calculate(indicator: typeof this.indicator, data: StockIndexDay[]) {
-      const { boll, kdj, ene, checked } = indicator
+      const { boll, kdj, ene, checked, td9 } = indicator
       let markers: any[] = []
       /**
        * 0 卖
@@ -26,7 +27,7 @@ export const useKChart = defineStore('k-chart', {
        * 2 不买不卖
        */
       data.forEach((item) => {
-        const { time, close, bollLower, bollUpper, slowK, slowD, slowJ, _internal_originalTime, td9, eneLower, eneUpper } = item
+        const { time, close, bollLower, bollUpper, slowK, slowD, slowJ, _internal_originalTime, td913, eneLower, eneUpper } = item
         const bollPB = (close - bollLower) / (bollUpper - bollLower)
         const isBuy = { BOLL: 2, KDJ: 2, TD9: 2, ENE: 2 }
         // 计算买点
@@ -42,14 +43,16 @@ export const useKChart = defineStore('k-chart', {
           if (slowK <= kdj && slowD <= kdj && slowJ <= kdj) isBuy.KDJ = 1
           if (slowK > 100 - kdj && slowD > 100 - kdj && slowJ > 100 - kdj) isBuy.KDJ = 0
         }
-        if (checked.includes('TD9')) isBuy.TD9 = indicator.td9.includes(td9 < 0 ? -td9 : td9) ? 1 : 0
-
+        if (checked.includes('TD9')) {
+          if (td913 >= td9[0] && td913 <= td9[1]) isBuy.TD9 = 0
+          if (td913 >= -td9[1] && td913 <= -td9[0]) isBuy.TD9 = 1
+        }
         type C = keyof typeof isBuy
         if (checked.length && checked.every((item) => isBuy[item as C] == 1)) {
           markers.push({
             time: _internal_originalTime,
             position: 'belowBar',
-            color: '#2196F3',
+            color: '#00F124',
             shape: 'arrowUp',
             text: '买'
           })
@@ -58,7 +61,7 @@ export const useKChart = defineStore('k-chart', {
           markers.push({
             time,
             position: 'aboveBar',
-            color: '#e91e63',
+            color: '#FFFB01',
             shape: 'arrowDown',
             text: '卖'
           })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useKChart } from '@/store'
 import screenfull from 'screenfull'
 const isFullscreen = ref(screenfull.isFullscreen)
+// document.onkeyup = (e) => e.code == 'Escape' && screenfull.isFullscreen && (isFullscreen.value = true)
 </script>
 
 <template>

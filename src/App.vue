@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import 'uno.css'
-import { useKChart } from './store'
 const kchart = reactive({
   data: [],
   markers: []

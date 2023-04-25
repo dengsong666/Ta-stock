@@ -19,7 +19,7 @@ export interface StockIndexDay {
   bollUpper: number
   eneUpper: number
   eneLower: number
-  td9: number
+  td913: number
   slowK: number
   slowD: number
   slowJ: number
