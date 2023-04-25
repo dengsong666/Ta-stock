@@ -1,5 +1,4 @@
 import { StockIndexDay } from '@/apis/types/stock'
-import {} from '@/utils'
 export const useKChart = defineStore('k-chart', {
   state: () => ({
     list: [] as StockIndexDay[],
