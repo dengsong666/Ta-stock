@@ -9,7 +9,7 @@ import os
 from datetime import timedelta, datetime
 from sqlalchemy import NVARCHAR, text
 
-from app.indicator import td9
+from app.indicator import td913
 from helper.my_http import crawler
 from sql.database import engine
 
@@ -58,6 +58,7 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
             df.columns = ['time', 'open', 'close', 'high', 'low', 'chg', 'chgp', 'vol']
             # 预处理
             df = df.drop_nulls(['open', 'high', 'low', 'close'])
+            # print(df[:100])
             df = df.unique(maintain_order=True)  # 过滤掉重复行
             if df.is_empty(): break
             # BOLL
@@ -68,9 +69,9 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
                 pl.DataFrame(tb.STOCH(df['high'], df['low'], df['close'], fastk_period=9, slowk_period=5,
                                       slowk_matype=1, slowd_period=5, slowd_matype=1), schema=['slowK', 'slowD']), )
             df = df.with_columns(slowJ=3 * pl.col('slowK') - 2 * pl.col('slowD'))
-
+            # print(df[:100])
             # 九转序列
-            df = td9(df)
+            df = td913(df)
             # ENE 轨道线
             N, M1, M2 = 10, 11, 9
             df = df.with_columns(eneUpper=(1 + M1 / 100) * tb.MA(df['close'], N),
@@ -79,6 +80,7 @@ def get_day(name, code, source, start_date='1990-01-01', end_date=datetime.today
             df = df.fill_nan(0).fill_null(0)
             with open(filename, mode=mode) as f:
                 df.write_csv(f, has_header=header, float_precision=2)
+                f.close()
     data = pl.read_csv(filename)
     e = time.perf_counter()
     print(s - e)

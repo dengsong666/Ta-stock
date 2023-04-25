@@ -4,7 +4,7 @@ up = down = 0
 
 
 # 九转序列
-def td9(df: pl.dataframe.frame.DataFrame):
+def td913(df: pl.dataframe.frame.DataFrame):
     def inner(diff):
         global up, down
         if diff > 0:
@@ -16,4 +16,4 @@ def td9(df: pl.dataframe.frame.DataFrame):
             up, down = 0, down - 1
             return down
 
-    return df.with_columns(td9=pl.col('close').diff(n=4).apply(lambda d: inner(d)))
+    return df.with_columns(td913=pl.col('close').diff(n=4).apply(lambda d: inner(d),return_dtype=pl.Int8))
