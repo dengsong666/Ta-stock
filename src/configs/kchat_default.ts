@@ -1,4 +1,4 @@
-import { ChartOptions, PriceScaleOptions, SeriesOptions, SeriesOptionsMap, Time, TimeScaleOptions } from 'lightweight-charts'
+import { ChartOptions, PriceScaleOptions, SeriesOptions, SeriesOptionsMap, TimeScaleOptions } from 'lightweight-charts'
 type DeepPartial<T> = Partial<{ [P in keyof T]: DeepPartial<T[P]> }>
 export const color = {
   bg: '#1c1d21',

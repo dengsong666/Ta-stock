@@ -14,11 +14,13 @@ kChart.option.chart = {
     }
   }
 }
+async function handleSelected() {}
 watch(kChart.crosshair, (val) => console.log(val))
 </script>
 
 <template>
-  <div class="flex-row w100% p16px box-border absolute z100 c-#fff">
+  <div class="flex-row items-center w100% p16px box-border absolute z100 c-#fff">
+    <i @click="handleSelected" class="i-my-select cursor-pointer mr16px"></i>
     <div class="grid-1-9-16">
       <span>日期：{{ kChart.crosshair?._internal_originalTime || '--' }}</span>
       <span>开盘：{{ kChart.crosshair?.open || '--' }}</span>
@@ -28,7 +30,6 @@ watch(kChart.crosshair, (val) => console.log(val))
       <span>涨跌幅：{{ kChart.crosshair?.chgp || '--' }}%</span>
       <span>成交量：{{ kChart.crosshair?.vol || '--' }}万手</span>
     </div>
-    <i class="mlauto i-my-select cursor-pointer"></i>
   </div>
 </template>
 

@@ -10,6 +10,7 @@ const isFullscreen = ref(screenfull.isFullscreen)
     <Search v-bind="$attrs" />
     <span class="grid-1-2-8 mlauto">
       <i @click="screenfull.toggle(), (isFullscreen = !isFullscreen)" :class="`${isFullscreen ? 'i-my-full-screen-exit' : 'i-my-full-screen'}`"></i>
+      <Person />
     </span>
   </div>
 </template>
