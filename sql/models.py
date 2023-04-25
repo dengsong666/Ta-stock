@@ -11,7 +11,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     enabled = Column(Boolean, default=True)
-    selected = relationship("Item", back_populates="index")
+    selected = relationship("Selected", back_populates="index")
 
 
 class Selected(Base):
