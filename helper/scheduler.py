@@ -1,15 +1,15 @@
 import functools
 import os
+import sys
 
 import pandas as pd
 import yagmail
 
 from schedule import every, repeat, run_pending, CancelJob
 import time
-
 from sqlalchemy import text
 
-from app.index import get_day
+from stock.index import get_day
 from sql.database import engine
 
 
@@ -51,8 +51,11 @@ def update_index():
         df.apply(lambda x: get_day(x['name'], x['code'], x['source'], path="../"), axis=1)
 
 
-update_index()
+# update_index()
 # get_day('科创50', '000688', 'Z', path="../")     0
+
+
+
 while True:
     run_pending()
     time.sleep(1)

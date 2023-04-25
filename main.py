@@ -1,28 +1,18 @@
-from time import time
+import os
 
 import uvicorn as uvicorn
 from fastapi import FastAPI, Request
 
-from route import index
+from stock.route import stock_router
+from user.route import user_router
 
 app = FastAPI()
-app.include_router(index.router)
-
+app.include_router(stock_router)
+app.include_router(user_router)
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
-
-
-# @app.middleware("http")
-# async def add_process_time_header(request: Request, call_next):
-#     # 请求前
-#     start_time = time()
-#     response = await call_next(request)
-#     # 请求后
-#     process_time = time() - start_time
-#     response.headers["X-Process-Time"] = str(process_time)
-#     return response
 
 
 if __name__ == "__main__":
