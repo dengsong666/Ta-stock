@@ -117,10 +117,10 @@ def save():
     print(z_df[:10], g_df[:10])
     pd.concat([z_df, g_df]).to_sql('stock_index', con=get_engine('../'), if_exists='replace', index=False)
 
-save()
+
+# save()
 # 模糊搜索指数
 def search(input_value):
     with get_engine().begin() as conn:
-        sql = text(
-            f"select * from stock_index where concat(name, code) like '%{input_value}%';")
+        sql = text(f"select * from stock_index where name like '%{input_value}%' or code like '%{input_value}%';")
         return conn.execute(sql).mappings().all()

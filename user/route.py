@@ -2,18 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from sql import models, schemas
-from sql.database import get_engine, SessionLocal
+from sql.database import get_engine, get_db
 from . import crud
 
 models.Base.metadata.create_all(bind=get_engine('../'))
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 # 属于该模块的路由

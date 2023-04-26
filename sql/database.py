@@ -10,3 +10,11 @@ def get_engine(path='./'):
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=get_engine())
 
 Base = declarative_base()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

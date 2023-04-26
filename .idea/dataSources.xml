@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="mysql" uuid="519cb6b4-fc19-4adc-b299-419b9231afed">
+    <data-source source="LOCAL" name="ta_stock@localhost" uuid="519cb6b4-fc19-4adc-b299-419b9231afed">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/ta_stock</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="redis" uuid="506f1d53-b775-4c8e-a6d0-5ebc713e03d5">
+    <data-source source="LOCAL" name="@localhost" uuid="506f1d53-b775-4c8e-a6d0-5ebc713e03d5">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
       <jdbc-url>jdbc:redis://localhost:6379/</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="sqlite" uuid="3b153d48-ad27-4f34-97ff-44c1d8fd774d">
+    <data-source source="LOCAL" name="sqlite" uuid="3074768e-ad5a-4cbc-bbb8-ff693431f07a">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>

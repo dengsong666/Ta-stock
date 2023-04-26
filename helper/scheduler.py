@@ -10,7 +10,7 @@ import time
 from sqlalchemy import text
 
 from stock.index import get_day
-from sql.database import engine
+from sql.database import get_engine
 
 
 def catch_exceptions(cancel_on_failure=False):
@@ -42,12 +42,14 @@ def send_email():
     yag.close()
 
 
+selected = ['930851','H30535','H30182','930901','H30184','399432','399971','399996','930641','399989','']
 # @catch_exceptions(cancel_on_failure=True)
 # @repeat(every(1).seconds)
 def update_index():
-    with engine.begin() as conn:
-        sql = text(f"select * from stock_index")
+    with get_engine().begin() as conn:
+        sql = text(f"select * from stock_index where code in ({})")
         df = pd.DataFrame(conn.execute(sql).fetchall())
+
         df.apply(lambda x: get_day(x['name'], x['code'], x['source'], path="../"), axis=1)
 
 
