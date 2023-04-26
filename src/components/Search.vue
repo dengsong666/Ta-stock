@@ -16,7 +16,7 @@ const renderLabel = ({ label }: any) => {
     h(
       'div',
       { class: 'grid-1-4-20' },
-      label?.split('-').map((item: string) => h('span', { class: 'elp', title: item }, item))
+      label?.split('_').map((item: string) => h('span', { class: 'elp', title: item }, item))
     )
   ]
 }
@@ -25,17 +25,17 @@ async function handleSearch(input_value: string) {
   search.loading = true
   const { data } = await searchIndex({ input_value })
   search.loading = false
-  search.result = data.map(({ name, code, source, series, classify }) => ({ value: `${name}-${code}-${source}`, label: `${name}-${code}-${series}-${classify}` }))
+  search.result = data.map(({ name, code, source, series, classify }) => ({ value: `${name}_${code}_${source}`, label: `${name}_${code}_${series}_${classify}` }))
 }
 
 async function handleUpdate(value: string) {
-  const [name, code, source] = value.split('-')
+  const [name, code, source] = value.split('_')
   const { data } = await getIndexDay({ name, code, source })
   kChart.list = data
   emit('k-data', data)
 }
 
-handleUpdate('创业板指-399006-G')
+handleUpdate('创业板指_399006_G')
 </script>
 
 <template>
