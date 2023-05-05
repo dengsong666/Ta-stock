@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getIndexDay, searchIndex } from '@/apis'
+import { getIndex, searchIndex } from '@/apis'
 import { useKChart } from '@/store'
 import { SelectOption, useLoadingBar, useMessage } from 'naive-ui'
 const kChart = useKChart()
@@ -25,17 +25,16 @@ async function handleSearch(input_value: string) {
   search.loading = true
   const { data } = await searchIndex({ input_value })
   search.loading = false
-  search.result = data.map(({ name, code, source, series, classify }) => ({ value: `${name}_${code}_${source}`, label: `${name}_${code}_${series}_${classify}` }))
+  search.result = data.map(({ name, code, source, series, classify }) => ({ value: code, label: `${name}_${code}_${series}_${classify}` }))
 }
 
-async function handleUpdate(value: string) {
-  const [name, code, source] = value.split('_')
-  const { data } = await getIndexDay({ name, code, source })
+async function handleUpdate(code: string) {
+  const { data } = await getIndex({ code })
   kChart.list = data
   emit('k-data', data)
 }
 
-handleUpdate('创业板指_399006_G')
+handleUpdate('399006')
 </script>
 
 <template>

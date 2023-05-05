@@ -3,13 +3,19 @@ import { StockIndex, StockIndexDay } from './types/stock'
 
 export function searchIndex(params: { input_value: string }) {
   return http.get<StockIndex[]>({
-    url: '/stock-index/search',
+    url: '/ta/search',
     params
   })
 }
-export function getIndexDay(params: { name: string; code: string; source: string }) {
+export function saveIndex(params: { code: string }) {
+  return http.get({
+    url: '/ta/save-index',
+    params
+  })
+}
+export function getIndex(params: { code: string }) {
   return http.get<StockIndexDay[]>({
-    url: '/stock-index/get-day',
+    url: '/ta/get-index',
     params
   })
 }

@@ -27,9 +27,11 @@ export const useKChart = defineStore('k-chart', {
        */
       data.forEach((item) => {
         const { time, close, bollLower, bollUpper, slowK, slowD, slowJ, _internal_originalTime, td913, eneLower, eneUpper } = item
-        const bollPB = (close - bollLower) / (bollUpper - bollLower)
+        // const bollPB = (close - bollLower) / (bollUpper - bollLower)
         const isBuy = { BOLL: 2, KDJ: 2, TD9: 2, ENE: 2 }
         // 计算买点
+        console.log(td913)
+
         if (checked.includes('BOLL')) {
           if (close - bollLower <= boll && bollLower) isBuy.BOLL = 1
           if (bollUpper - close <= boll && bollUpper) isBuy.BOLL = 0
